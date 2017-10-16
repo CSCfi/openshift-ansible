@@ -26,6 +26,7 @@ ExecStartPost=/usr/bin/sleep 10
 ExecStop=/usr/bin/docker stop {{ openshift.common.service_type }}-node
 ExecStopPost=/usr/bin/rm /etc/dnsmasq.d/node-dnsmasq.conf
 ExecStopPost=/usr/bin/dbus-send --system --dest=uk.org.thekelleys.dnsmasq /uk/org/thekelleys/dnsmasq uk.org.thekelleys.SetDomainServers array:string:
+ExecStopPost=/usr/bin/bash -c 'sleep $((10 + RANDOM%21))'
 SyslogIdentifier={{ openshift.common.service_type }}-node
 Restart=always
 RestartSec=5s
