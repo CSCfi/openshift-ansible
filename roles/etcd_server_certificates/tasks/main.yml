@@ -5,14 +5,11 @@
 
 - name: Check status of etcd certificates
   stat:
-    path: "{{ item }}"
+    path: "{{ etcd_cert_config_dir }}/{{ item }}"
   with_items:
-  - "{{ etcd_cert_config_dir }}/{{ etcd_cert_prefix }}server.crt"
-  - "{{ etcd_cert_config_dir }}/{{ etcd_cert_prefix }}peer.crt"
-  - "{{ etcd_cert_config_dir }}/{{ etcd_cert_prefix }}ca.crt"
-  - "{{ etcd_system_container_cert_config_dir }}/{{ etcd_cert_prefix }}server.crt"
-  - "{{ etcd_system_container_cert_config_dir }}/{{ etcd_cert_prefix }}peer.crt"
-  - "{{ etcd_system_container_cert_config_dir }}/{{ etcd_cert_prefix }}ca.crt"
+  - "{{ etcd_cert_prefix }}server.crt"
+  - "{{ etcd_cert_prefix }}peer.crt"
+  - "{{ etcd_cert_prefix }}ca.crt"
   register: g_etcd_server_cert_stat_result
   when: not etcd_certificates_redeploy | default(false) | bool
 
@@ -135,11 +132,8 @@
 
 - name: Ensure certificate directory exists
   file:
-    path: "{{ item }}"
+    path: "{{ etcd_cert_config_dir }}"
     state: directory
-  with_items:
-  - "{{ etcd_cert_config_dir }}"
-  - "{{ etcd_system_container_cert_config_dir }}"
   when: etcd_server_certs_missing | bool
 
 - name: Unarchive cert tarball
@@ -170,28 +164,15 @@
 
 - name: Ensure ca directory exists
   file:
-    path: "{{ item }}"
+    path: "{{ etcd_ca_dir }}"
     state: directory
-  with_items:
-  - "{{ etcd_ca_dir }}"
-  - "{{ etcd_system_container_cert_config_dir }}/ca"
   when: etcd_server_certs_missing | bool
 
-- name: Unarchive cert tarball for the system container
-  unarchive:
-    src: "{{ g_etcd_server_mktemp.stdout }}/{{ etcd_cert_subdir }}.tgz"
-    dest: "{{ etcd_system_container_cert_config_dir }}"
-  when:
-  - etcd_server_certs_missing | bool
-  - r_etcd_common_etcd_runtime == 'runc'
-
-- name: Unarchive etcd ca cert tarballs for the system container
+- name: Unarchive etcd ca cert tarballs
   unarchive:
     src: "{{ g_etcd_server_mktemp.stdout }}/{{ etcd_ca_name }}.tgz"
-    dest: "{{ etcd_system_container_cert_config_dir }}/ca"
-  when:
-  - etcd_server_certs_missing | bool
-  - r_etcd_common_etcd_runtime == 'runc'
+    dest: "{{ etcd_ca_dir }}"
+  when: etcd_server_certs_missing | bool
 
 - name: Delete temporary directory
   local_action: file path="{{ g_etcd_server_mktemp.stdout }}" state=absent
