@@ -15,7 +15,10 @@
   oc_project:
     state: present
     name: "{{ glusterfs_namespace }}"
-    node_selector: "{% if glusterfs_use_default_selector %}{{ omit }}{% endif %}"
+    ## workaround for empty node selector not getting set by oc_project during the
+    ## first run. The original code should be fine.
+    #node_selector: "{% if glusterfs_use_default_selector %}{{ omit }}{% endif %}"
+    node_selector: "type=glusterfs"
   when: glusterfs_is_native or glusterfs_heketi_is_native or glusterfs_storageclass
 
 - name: Delete pre-existing heketi resources
