@@ -61,6 +61,8 @@ objects:
           glusterfs: deploy-heketi-${CLUSTER_NAME}-pod
           deploy-heketi: support
       spec:
+        nodeSelector:
+          type: ${HEKETI_NODE_SELECTOR}
         serviceAccountName: heketi-${CLUSTER_NAME}-service-account
         containers:
         - name: heketi
@@ -137,3 +139,7 @@ parameters:
   displayName: Wrapper for executing LVM commands
   description: Heketi can use a wrapper to execute LVM commands, i.e. run commands in the host namespace instead of in the Gluster container.
   value: "/usr/sbin/exec-on-host"
+- name: HEKETI_NODE_SELECTOR
+  displayName: Heketi node selector
+  description: A node selector for the Heketi deployment
+  value: "master"

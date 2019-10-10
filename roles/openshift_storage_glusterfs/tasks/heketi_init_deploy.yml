@@ -27,6 +27,7 @@
       HEKETI_FSTAB: "{{ glusterfs_heketi_fstab }}"
       CLUSTER_NAME: "{{ glusterfs_name }}"
       HEKETI_LVM_WRAPPER: "{% if glusterfs_is_native | bool %}{{ glusterfs_heketi_lvm_wrapper }}{% endif %}"
+      HEKETI_NODE_SELECTOR: "{{ heketi_node_selector }}"
 
 - name: Wait for deploy-heketi pod
   oc_obj:

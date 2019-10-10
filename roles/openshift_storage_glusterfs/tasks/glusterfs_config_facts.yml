@@ -49,3 +49,4 @@
     glusterfs_heketi_lvm_wrapper: "{{ openshift_storage_glusterfs_heketi_lvm_wrapper }}"
     glusterfs_nodes: "{{ groups.glusterfs | default([]) }}"
     glusterfs_check_brick_size_health: "{{ openshift_storage_glusterfs_check_brick_size_health | bool }}"
+    heketi_node_selector: "{{ openshift_heketi_node_selector | default('master') }}"
