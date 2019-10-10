@@ -54,6 +54,7 @@
       HEKETI_EXECUTOR: "{{ glusterfs_heketi_executor }}"
       HEKETI_FSTAB: "{{ glusterfs_heketi_fstab }}"
       CLUSTER_NAME: "{{ glusterfs_name }}"
+      HEKETI_NODE_SELECTOR: "{{ heketi_node_selector }}"
 
 - name: Wait for heketi pod
   oc_obj:
