@@ -61,6 +61,8 @@ objects:
           glusterfs: heketi-${CLUSTER_NAME}-pod
           heketi: ${CLUSTER_NAME}-pod
       spec:
+        nodeSelector:
+          type: ${HEKETI_NODE_SELECTOR}
         serviceAccountName: heketi-${CLUSTER_NAME}-service-account
         containers:
         - name: heketi
@@ -143,3 +145,7 @@ parameters:
   displayName: GlusterFS cluster name
   description: A unique name to identify this heketi service, useful for running multiple heketi instances
   value: glusterfs
+- name: HEKETI_NODE_SELECTOR
+  displayName: Heketi node selector
+  description: A node selector for the Heketi deployment
+  value: "master"
